@@ -8,12 +8,15 @@
 </head>
 <body>
     
-<h1>Hello World</h1>
+<h1>Whiteboard</h1>
 <canvas id="canvas1"
         style="background-color: yellow;"
         width="500" height="500" >
 
 </canvas>
+<button onclick = "clearCanvas()", type = "button">
+    Clear Whiteboard
+</button>
 
 <script>
 
@@ -72,6 +75,12 @@
         console.log("Coordinate x: " + x, "Coordinate y: " + y);
 
         return [x, y];
+    }
+
+    
+    function clearCanvas () {
+        canvas.clearRect(0, 0, element.width, element.height);
+        canvas.beginPath();
     }
     
     // Listeners to check if mouse is up, down, or moving
