@@ -21,16 +21,25 @@
     const element = document.getElementById('canvas1');
     const canvas = element.getContext('2d');
     let mouseID = -1;
-    let mousePos = [];
-    let draw = true;
+    let lastDrawPos = [0, 0];
+    let mousePos = [0, 0];
+    let drawing = false;
 
     /* Drawing function to be repeated while mouse is down on canvas
-    *  Function uses the current x and y position of mouse and draws at that point
+    *  Function uses the current x and y position of mouse and draws from that point to the last position mouse was in
     */
     function whileMouseDown(canvasElem) {
+
+        // Checks if this is the first draw since mouse has been clicked
+        // If it is then lastDrawPos should be equal to current mouse position
+        if (drawing == false) {
+            lastDrawPos = [mousePos[0] + 1, mousePos[1] + 1]
+        }
         canvas.moveTo(mousePos[0], mousePos[1]);
-        canvas.lineTo(mousePos[0] + 1, mousePos[1] + 1);
+        canvas.lineTo(lastDrawPos[0], lastDrawPos[1]);
         canvas.stroke();
+        lastDrawPos = mousePos;
+        drawing = true;
         console.log(mousePos[0], mousePos[1]);
     }
 
@@ -48,6 +57,7 @@
         if (mouseID != -1) {
             clearInterval(mouseID);
             mouseID = -1;
+            drawing = false;
         } 
     }
 
