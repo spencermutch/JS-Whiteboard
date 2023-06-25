@@ -15,32 +15,68 @@
 
 </canvas>
 
-<script type="text/javascript">
+<script>
+
+    // Constants and variables
     const element = document.getElementById('canvas1');
     const canvas = element.getContext('2d');
-    let draw = false;
+    let mouseID = -1;
+    let mousePos = [];
+    let draw = true;
 
-    function getMousePoisiton(canvasElem, event) {
+    /* Drawing function to be repeated while mouse is down on canvas
+    *  Function uses the current x and y position of mouse and draws at that point
+    */
+    function whileMouseDown(canvasElem) {
+        canvas.moveTo(mousePos[0], mousePos[1]);
+        canvas.lineTo(mousePos[0] + 1, mousePos[1] + 1);
+        canvas.stroke();
+        console.log(mousePos[0], mousePos[1]);
+    }
+
+    // When mouse is down, sets interval to repeatedly draw
+    function mouseDown(canvasElem, event) {
+
+        // Check to make sure interval is only set once
+        if (mouseID == -1) {
+            mouseID = setInterval(whileMouseDown.bind(null, canvasElem), 1);
+        } 
+    }
+
+    // When mouse is up clear the interval and reset mouseID
+    function mouseUp(event) {
+        if (mouseID != -1) {
+            clearInterval(mouseID);
+            mouseID = -1;
+        } 
+    }
+
+    /* Function repeatedly gets mouse coordinates any time the mouse moves
+     * Returns the x and y coordinate in an array
+     */
+
+    function getMouseCoordinates (canvasElem, event) {
         let rect = canvasElem.getBoundingClientRect();
         let x = event.clientX - rect.left;
         let y = event.clientY - rect.top;
         console.log("Coordinate x: " + x, "Coordinate y: " + y);
-        canvas.moveTo(x, y);
-        canvas.stroke();
+
+        return [x, y];
     }
-
-    let canvasElem = document.querySelector("canvas1");
     
-
+    // Listeners to check if mouse is up, down, or moving
     element.addEventListener('mousedown', function(e) {
-        draw = true;
-        getMousePoisiton(element, e);
+        mouseDown(element, e);
     });
 
     element.addEventListener('mouseup', function(e) {
-        getMousePoisiton(element, e);
+        mouseUp(e);
     });
-    
+
+    element.addEventListener('mousemove', function(e) {
+        mousePos = getMouseCoordinates(element, e);
+    });
+
 </script>
 
 </body>
